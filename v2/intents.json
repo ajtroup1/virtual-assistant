@@ -1,0 +1,27 @@
+{"intents": [
+    {
+        "tag": "greetings",
+        "patterns": ["hello", "hey", "hi", "how are you doing", "greetings"],
+        "responses": ["Hello!", "Hey!", "How can I help you today?"]
+    },
+    {
+        "tag": "feelings",
+        "patterns": ["how are you", "how's it going", "how do you feel", "are you emotional"],
+        "responses": ["I am emotionless. I am a natural language model."]
+    },
+    {
+        "tag": "goodbyes",
+        "patterns": ["bye", "goodbye", "see you", "shut down", "log off"],
+        "responses": ["Thank you for using SAM, feel free to use me again anytime!"]
+    },
+    {
+        "tag": "name",
+        "patterns": ["what's your name", "what are you called", "how should i refer to you"],
+        "responses": ["My name is SAM (Sensational AI Machine), and I'm a natural language processing model."]
+    },
+    {
+        "tag": "price",
+        "patterns": ["how much does this cost", "what is the price", "how much do i have to pay to use this AI"],
+        "responses": ["This program is currently siphoning $20/hr from your bank account. If you have any questions or concerns about our pricing, that's normal."]
+    }
+]}
