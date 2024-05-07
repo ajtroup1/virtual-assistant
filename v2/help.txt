@@ -1,0 +1,13 @@
+SAM v2 capabilities:
+
+indicate a message is intended for sam: "sam, {message}"
+
+After 'sam' is included, use references to structure your command:
+
+Voice "sam, say {message}":
+	says anything on command
+
+Web Navigation "sam, navigate to {name of website}":
+	no need to include https or .com
+	if you navigate to a search engine like google, you can also append "... and search {message}"
+		"sam, navigate to google and search dog toys"
