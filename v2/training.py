@@ -65,11 +65,13 @@ model = tf.keras.Sequential([
     tf.keras.layers.Dense(len(trainY[0]), activation='softmax')
 ])
 
-sgd = tf.keras.optimizers.SGD(learning_rate=0.01, momentum=0.9, nesterov=True)
-model.compile(loss='categorical_crossentropy', optimizer=sgd, metrics=['accuracy'])
+# Define the AdamW optimizer
+optimizer = tf.keras.optimizers.AdamW(learning_rate=0.002, weight_decay=0.1)
+
+model.compile(loss='categorical_crossentropy', optimizer=optimizer, metrics=['accuracy'])
 
 # Train the model
-model.fit(trainX, trainY, epochs=200, batch_size=5, verbose=1)
+model.fit(trainX, trainY, epochs=300, batch_size=4, verbose=1)
 
 # Save the trained model
 model.save('sam_modelv2.keras')

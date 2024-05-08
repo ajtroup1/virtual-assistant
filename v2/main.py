@@ -7,7 +7,65 @@ import wolframalpha
 import re
 import requests
 import os
+import random
+import json
+import pickle
+import numpy as np
+import nltk
+from nltk import WordNetLemmatizer
+from tensorflow.keras.models import load_model
 
+# AI importation and function
+lemmatizer = WordNetLemmatizer()
+intents = json.loads(open('./intents.json').read())
+
+words = pickle.load(open('./words.pkl', 'rb'))
+classes = pickle.load(open('./classes.pkl', 'rb'))
+model = load_model('./sam_modelv2.keras')
+
+def clean_up_sentence(sentence):
+    sentence_words = nltk.word_tokenize(sentence)
+    sentence_words = [lemmatizer.lemmatize(word) for word in sentence_words]
+
+    return sentence_words
+
+def bag_of_words(sentence):
+    sentence_words = clean_up_sentence(sentence=sentence)
+    bag = [0] * len(words)
+
+    for w in sentence_words:
+        for i, word in enumerate(words):
+            if word == w:
+                bag[i] = 1
+
+    return np.array(bag)
+
+def predict_class(sentence):
+    bag = bag_of_words(sentence=sentence)
+    result = model.predict(np.array([bag]))[0]
+    ERROR_THRESHOLD = 0.25
+    results = [[i, r] for i, r, in enumerate(result) if r > ERROR_THRESHOLD]
+
+    results.sort(key=lambda x: x[1], reverse=True)
+    return_list = []
+
+    for r in results:
+        return_list.append({'intent': classes[r[0]], 'probability': str(r[1])})
+
+    # print(return_list)
+    
+    return return_list
+
+def get_response(intents_list, intents_json):
+    tag = intents_list[0]['intent']
+    list_of_intents = intents_json['intents']
+    for i in list_of_intents:
+        if i['tag'] == tag:
+            result = random.choice(i['responses'])
+            break
+    return result
+
+# SAM code start
 os.system('cls')
 
 activation_word = 'sam'
@@ -48,16 +106,16 @@ def display_help_file(file_path):
 
 def parse_command():
     listener = sr.Recognizer()
-    print('Currently listening to everything you are saying!')
 
     with sr.Microphone() as source:
         listener.pause_threshold = 1.25
         input_speech = listener.listen(source=source)
 
     try:
-        print('...')
         query = listener.recognize_google(input_speech, language='en_us')
-        print(f'input: {query.lower()}')
+        if 'sam' not in query.lower():
+            parse_command()
+        print(f'You said: {query.lower()}\n')
     except Exception as e:
         # err = f'You are bad at giving me directions, look at this: {e}'
         # speak(err)
@@ -65,14 +123,13 @@ def parse_command():
     
     return query.lower()
 
-def route_sam_function(query=None):
-    print("Joined query:", ''.join(query))
-    if query[0] == 'exit':
+def route_sam_function(query=None, intent=None):
+    if intent == 'goodbyes':
         speak('Goodbye')
         exit()
 
     # sam voice request
-    if query[0] == 'say': 
+    elif query[0] == 'say': 
         if 'hello' in query:
             speak('Hello!')
         else:
@@ -86,7 +143,7 @@ def route_sam_function(query=None):
         os.system('cls')
     
     # spotify api current song request
-    elif ''.join(query) == 'whatsongisthis':
+    elif intent == 'song':
         response = requests.get("http://127.0.0.1:8000/spotify/current-song")
         if response.status_code == 200:
             song_data = response.json()
@@ -99,8 +156,36 @@ def route_sam_function(query=None):
         else:
             speak("Couldn't find the song")
 
-    # spotify api volume up (the fun way)
-    elif ''.join(query) == 'turnitup':
+    elif intent == 'play':
+        response = requests.put("http://127.0.0.1:8000/spotify/play")
+        if response.status_code == 204:
+            speak('Playing')
+            print("Playback started successfully.")
+        else:
+            print("Failed to start playback.")
+    elif intent == 'pause':
+        response = requests.put("http://127.0.0.1:8000/spotify/pause")
+        if response.status_code == 204:
+            speak('pausing')
+            print("Playback paused successfully.")
+        else:
+            print("Failed to pause playback.")
+    elif intent == 'skip':
+        response = requests.post("http://127.0.0.1:8000/spotify/skip")
+        if response.status_code == 204:
+            speak('skipping')
+            print("Playback skipped successfully.")
+        else:
+            print("Failed to skip playback.")
+    elif intent == 'rewind':
+        response = requests.post("http://127.0.0.1:8000/spotify/rewind")
+        if response.status_code == 204:
+            speak('rewinding')
+            print("Playback reversed successfully.")
+        else:
+            print("Failed to reverse playback.")
+
+    elif intent == 'volup':
         response = requests.get("http://127.0.0.1:8000/spotify/get-device")
         if response.status_code == 200:
             song_data = response.json()
@@ -117,8 +202,7 @@ def route_sam_function(query=None):
         else:
             speak("Couldn't find the song")
 
-    # spotify api volume down (the fun way)
-    elif ''.join(query) == 'turnitdown':
+    elif intent == 'voldown':
         response = requests.get("http://127.0.0.1:8000/spotify/get-device")
         if response.status_code == 200:
             song_data = response.json()
@@ -135,7 +219,7 @@ def route_sam_function(query=None):
         else:
             speak("Couldn't find the song")
 
-    elif query[0] == 'help':
+    elif intent == 'help':
         speak('Displaying help text...')
         os.system('cls')
         display_help_file('help.txt')
@@ -173,46 +257,41 @@ def route_sam_function(query=None):
             query.pop(0) # wikipedia
             query.pop(0) # for
             search = ' '.join(query[0:])
+            os.system('clear')
             search_wiki(search=search)
-
-    elif query[0] == 'spotify':
-        query.pop(0)
-    
-        if query[0] == 'play':
-            response = requests.put("http://127.0.0.1:8000/spotify/play")
-            if response.status_code == 204:
-                print("Playback started successfully.")
-            else:
-                print("Failed to start playback.")
-        elif query[0] == 'pause':
-            response = requests.put("http://127.0.0.1:8000/spotify/pause")
-            if response.status_code == 204:
-                print("Playback paused successfully.")
-            else:
-                print("Failed to pause playback.")
-        elif query[0] == 'skip':
-            response = requests.post("http://127.0.0.1:8000/spotify/skip")
-            if response.status_code == 204:
-                print("Playback skipped successfully.")
-            else:
-                print("Failed to pause playback.")
 
     # default handling
     else:
-        speak("I heard you say my name, but didn't hear a keyword after. To refer to the SAM documentation say, help!")
+        speak("I heard you say my name, but didn't hear a keyword after. To refer to the SAM documentation say, sam help!")
 
 # user loop
 if __name__ == '__main__':
     # engine.say('Welcome, I am SAM, your virtual assistant. Just say, sam, to signify a query for me')
     # engine.runAndWait()
 
+    print('Currently listening to everything you are saying!')
+
     while True:
         # message structure: "computer (act word), go to google.com (request) (2 sec silence stops)"
         query = parse_command().lower().split()
-    
-        if query[0] == activation_word:
-            query.pop(0)
+        class_query = ' '.join(query)
+        ints = predict_class(class_query)
+        if ints == []:
+            pass
         else:
-            continue
-        
-        route_sam_function(query=query)
+            dict = ints[0]
+            intent_value = dict['intent']
+            prob = float(dict['probability'])
+
+            if prob < .8:
+                pass
+            else:
+
+                # print(intent_value)
+
+                if query[0] == activation_word:
+                    query.pop(0)
+                else:
+                    continue
+                
+                route_sam_function(query=query, intent=intent_value)
