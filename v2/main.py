@@ -168,7 +168,7 @@ def route_sam_function(query=None):
                 speak(f"ok, here's {speech}")
 
         # wikipedia query
-        elif query[0] == 'search' and query[1] == 'wikipedia':
+        elif query[0] == 'search' and query[1] == 'wikipedia' or query[1] == 'wiki':
             query.pop(0) # search
             query.pop(0) # wikipedia
             query.pop(0) # for

@@ -65,24 +65,29 @@ def refresh_spotify_token():
 
 
 def execute_spotify_api_request(endpoint, post_=False, put_=False):
-    tokens = get_user_tokens()
-    headers = {'Content-Type': 'application/json',
-               'Authorization': "Bearer " + tokens.access_token}
-    
-    # print(tokens.access_token)
+    auth = is_spotify_authenticated()
+    if auth == True:
+        tokens = get_user_tokens()
+        headers = {'Content-Type': 'application/json',
+                'Authorization': "Bearer " + tokens.access_token}
+        
+        # print(tokens.access_token)
 
-    if post_:
-        post(BASE_URL + endpoint, headers=headers)
-    if put_:
-        put(BASE_URL + endpoint, headers=headers)
+        if post_:
+            post(BASE_URL + endpoint, headers=headers)
+        if put_:
+            put(BASE_URL + endpoint, headers=headers)
 
-    # print('url: ',BASE_URL + endpoint)
+        # print('url: ',BASE_URL + endpoint)
 
-    response = get(BASE_URL + endpoint, {}, headers=headers)
-    try:
-        return response.json()
-    except:
-        return {'Error': 'Issue with request'}
+        response = get(BASE_URL + endpoint, {}, headers=headers)
+        try:
+            return response.json()
+        except:
+            return {'Error': 'Issue with request'}
+    else:
+        update_or_create_user_tokens()
+        return{'Try again': ''}
 
 def play_song():
     return execute_spotify_api_request("player/play", put_=True)
