@@ -3,7 +3,8 @@ import speech_recognition as sr
 import pyttsx3
 import webbrowser
 import wikipedia
-import wolframalpha
+import sys
+# import wolframalpha
 import re
 import requests
 import os
@@ -125,8 +126,8 @@ def parse_command():
 
 def route_sam_function(query=None, intent=None):
     if intent == 'goodbyes':
-        speak('Goodbye')
-        exit()
+        speak('Shutting down...')
+        sys.exit(0)
 
     # sam voice request
     elif query[0] == 'say': 
@@ -243,7 +244,7 @@ def route_sam_function(query=None, intent=None):
                     search = '+'.join(query)
                     # https://www.google.com/search?q=top+100+billboard&
                     url = f'https://www.{site}.com/search?q={search}'
-                    print(url)
+                    # print(url)
                     webbrowser.open(url)
             else:
                 speech = ' '.join(query)

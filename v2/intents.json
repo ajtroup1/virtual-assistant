@@ -43,7 +43,10 @@
         "Take care!",
         "Goodbye for now!",
         "See you soon!",
-        "Until we meet again!"
+        "Until we meet again!",
+        "exit",
+        "leave the program",
+        "can you exit"
       ],
       "responses": [
         "Thank you for using SAM, feel free to use me again anytime!",
