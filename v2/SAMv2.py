@@ -9,11 +9,11 @@ from nltk import WordNetLemmatizer
 from tensorflow.keras.models import load_model
 
 lemmatizer = WordNetLemmatizer()
-intents = json.loads(open('./intents.json').read())
+intents = json.loads(open('./aitools/intents.json').read())
 
-words = pickle.load(open('./words.pkl', 'rb'))
-classes = pickle.load(open('./classes.pkl', 'rb'))
-model = load_model('./sam_modelv2.keras')
+words = pickle.load(open('./aitools/words.pkl', 'rb'))
+classes = pickle.load(open('./aitools/classes.pkl', 'rb'))
+model = load_model('./aitools/sam_modelv2.keras')
 
 def clean_up_sentence(sentence):
     sentence_words = nltk.word_tokenize(sentence)

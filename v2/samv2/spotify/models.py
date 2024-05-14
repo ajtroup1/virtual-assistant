@@ -8,3 +8,9 @@ class SpotifyToken(models.Model):
     access_token = models.CharField(max_length=150)
     expires_in = models.DateTimeField()
     token_type = models.CharField(max_length=50)
+
+class Song(models.Model):
+    uri = models.CharField(max_length=50, null=False)
+    name = models.CharField(max_length=50, unique=False)
+    artist = models.CharField(max_length=50, unique=False)
+    

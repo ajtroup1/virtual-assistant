@@ -3,6 +3,7 @@ from django.utils import timezone
 from datetime import timedelta
 from .credentials import CLIENT_ID, CLIENT_SECRET
 from requests import post, put, get
+import requests
 
 
 BASE_URL = "https://api.spotify.com/v1/me/"
@@ -103,3 +104,37 @@ def rewind_song():
 
 def set_volume(val):
     return execute_spotify_api_request(f"player/volume?volume_percent={val}", put_=True)
+
+def queue_song(device_id, uri):
+    auth = is_spotify_authenticated()
+    if auth:
+        tokens = get_user_tokens()
+        headers = {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + tokens.access_token
+        }
+        endpoint = 'player/queue'
+        data = {
+            'uri': f'spotify:track:{uri}',
+            'device_id': device_id
+        }
+
+        # print(BASE_URL + endpoint)
+        response = requests.post(BASE_URL + endpoint, params=data, headers=headers)
+
+        print(response)
+
+        if response.status_code == 204:
+            return {'Success': 'Song queued successfully'}
+        elif response.status_code == 401:
+            update_or_create_user_tokens()
+            return {'Error': 'Bad or expired token'}
+        elif response.status_code == 403:
+            return {'Error': "Bad OAuth request (wrong consumer key, bad nonce, expired timestamp...). Unfortunately, re-authenticating the user won't help here."}
+        elif response.status_code == 429:
+            return {'Error': 'The app has exceeded its rate limits.'}
+        else:
+            return {'Error': 'Failed to queue song'}
+    else:
+        update_or_create_user_tokens()
+        return {'Error': 'User not authenticated'}

@@ -1,0 +1,381 @@
+{
+  "intents": [
+    {
+      "tag": "greetings",
+      "patterns": [
+        "hello",
+        "hey",
+        "hi",
+        "how are you doing",
+        "greetings",
+        "Hi there!",
+        "Greetings!",
+        "Hey, how's it going?",
+        "Good day!",
+        "What's up?"
+      ],
+      "responses": ["Hello!", "Hey!", "How can I help you today?"]
+    },
+    {
+      "tag": "feelings",
+      "patterns": [
+        "how are you",
+        "how's it going",
+        "how do you feel",
+        "are you emotional",
+        "Are you feeling okay?",
+        "How's your mood?",
+        "Feeling good today?",
+        "Are you happy?",
+        "Feeling any emotions?"
+      ],
+      "responses": ["I am emotionless. I am a natural language model."]
+    },
+    {
+      "tag": "goodbyes",
+      "patterns": [
+        "bye",
+        "goodbye",
+        "see you",
+        "shut down",
+        "log off",
+        "Catch you later!",
+        "Take care!",
+        "Goodbye for now!",
+        "See you soon!",
+        "Until we meet again!",
+        "exit",
+        "leave the program",
+        "can you exit"
+      ],
+      "responses": [
+        "Thank you for using SAM, feel free to use me again anytime!",
+        "Bye!",
+        "See ya!",
+        "Until next time!"
+      ]
+    },
+    {
+      "tag": "clear",
+      "patterns": [
+        "clear the screen",
+        "clear",
+        "wipe",
+        "get rid of the screen",
+        "clean the screen",
+        "remove the screen content",
+        "erase the screen",
+        "blank the screen",
+        "reset the screen"
+      ],
+      "responses": ["Clearing"]
+    },
+    {
+      "tag": "name",
+      "patterns": [
+        "what's your name",
+        "what are you called",
+        "how should i refer to you",
+        "Do you have a name?",
+        "What should I call you?",
+        "Your name, please?",
+        "Who are you?",
+        "What's your title?"
+      ],
+      "responses": [
+        "My name is SAM (Sensational AI Machine), and I'm a natural language processing model."
+      ]
+    },
+    {
+      "tag": "help",
+      "patterns": [
+        "help",
+        "what commands do you have",
+        "what can i say to you",
+        "can you help me",
+        "waht can i do with you",
+        "what are you capabilities"
+      ],
+      "responses": ["Here is the help file..."]
+    },
+    {
+      "tag": "say",
+      "patterns": [
+        "can you say this: word",
+        "say word",
+        "please say word",
+        "repeat after me: word"
+      ],
+      "responses": ["word", "Word", "Sure, word", "Gladly, word"]
+    },
+    {
+      "tag": "navigate",
+      "patterns": [
+        "go to website.com",
+        "navigate to webiste.com",
+        "can you take me to website.com",
+        "please open up website.com",
+        "go to website.com and search value",
+        "navigate to website.com and search value"
+      ],
+      "responses": [
+        "Going to website.com",
+        "Navigating to website.com",
+        "Going to website.com and searching value"
+      ]
+    },
+    {
+      "tag": "wikipedia",
+      "patterns": [
+        "search wikipedia for topic",
+        "go to wikipedia and search topic",
+        "search for topic on wikipedia",
+        "on wikipedia, find me something about topic"
+      ],
+      "responses": [
+        "Going to wikipedia and searching for topic",
+        "Navigating to wikipedia and searching topic"
+      ]
+    },
+    {
+      "tag": "timer",
+      "patterns": [
+        "set a timer",
+        "start the timer",
+        "timer",
+        "can you set a timer for"
+      ],
+      "responses": ["Setting a timer"]
+    },
+    {
+      "tag": "stopwatch",
+      "patterns": [
+        "set a stopwatch",
+        "start the stopwatch",
+        "stopwatch",
+        "can you begin the stopwatch"
+      ],
+      "responses": ["Starting the stopwatch"]
+    },
+    {
+      "tag": "scrapestock",
+      "patterns": [
+        "can you find more information about this stock",
+        "search the web for information on this stock",
+        "scrape the web for info about this stock",
+        "find out more about this stock on the internet",
+        "Can you find more information about stock X online?",
+        "Search the web for detailed information on stock X",
+        "Scrape the internet for up-to-date data on stock X",
+        "Find out more about stock X from online sources"
+      ],
+      "responses": ["Scraping for stock"]
+    },
+    {
+      "tag": "getstock",
+      "patterns": [
+        "pull up the info on this stock",
+        "get information regarding this stock",
+        "retreive this stock's information",
+        "tell me about stock X",
+        "Pull up the latest information on stock X",
+        "Retrieve detailed data regarding stock X",
+        "Fetch information about stock X from the database",
+        "Tell me about the current status of stock X"
+      ],
+      "responses": ["Getting stock info"]
+    },
+    {
+      "tag": "song",
+      "patterns": [
+        "identify this song",
+        "tell me the song name",
+        "what's playing right now",
+        "song info please",
+        "what's the name of this track",
+        "identify the current song",
+        "spotify song details",
+        "song details",
+        "song identification",
+        "what's on Spotify",
+        "what's the title of this song"
+      ],
+      "responses": ["The song is...", "This song is ... by ..."]
+    },
+    {
+      "tag": "favorite",
+      "patterns": [
+        "favorite this song",
+        "add this song to favorites",
+        "i like this song",
+        "save this song",
+        "this is a favorite",
+        "mark as favorite",
+        "save as favorite",
+        "add to liked songs"
+      ],
+      "responses": ["Adding song to favorites"]
+    },
+    {
+      "tag": "favorites",
+      "patterns": [
+        "show me my favorites",
+        "pull up my saved songs",
+        "i want to see my liked songs",
+        "show favorites",
+        "display favorite songs",
+        "list my favorites",
+        "retrieve liked tracks",
+        "view saved songs",
+        "check my favorites"
+      ],
+      "responses": ["Pulling up favorite songs"]
+    },
+    {
+      "tag": "queueid",
+      "patterns": [
+        "can you queue a song by id",
+        "play this song next by id",
+        "add this track to the queue by its ID",
+        "queue up this song using its ID",
+        "play a track with the specified ID next",
+        "put this song in the queue using its unique identifier"
+      ],
+      "responses": ["Queue by id"]
+    },
+    {
+      "tag": "queueartist",
+      "patterns": [
+        "can you queue a song by artist",
+        "play this song next by this artist",
+        "queue a song by this artist",
+        "add a track by this artist to the queue",
+        "play a song next from this artist",
+        "put this artist's track in the queue"
+      ],
+      "responses": ["Queue by artist"]
+    },
+    {
+      "tag": "play",
+      "patterns": [
+        "start the song",
+        "begin playing music",
+        "start playing",
+        "play some tunes",
+        "hit play",
+        "start the music",
+        "resume playback",
+        "play a track",
+        "play a song on Spotify",
+        "play something",
+        "start the playlist",
+        "begin the music",
+        "activate the song",
+        "commence playback"
+      ],
+      "responses": ["Playing spotify song", "Resuming spotify"]
+    },
+    {
+      "tag": "pause",
+      "patterns": [
+        "stop the song",
+        "halt the music",
+        "pause playback",
+        "stop playing",
+        "freeze the track",
+        "suspend playback",
+        "pause the tunes",
+        "end playback",
+        "put a stop to the music",
+        "cease the song",
+        "interrupt playback",
+        "terminate the music",
+        "hold the song"
+      ],
+      "responses": ["Pausing spotify song", "Pausing spotify"]
+    },
+    {
+      "tag": "skip",
+      "patterns": [
+        "move to the next spotify song",
+        "forward the music",
+        "advance the song",
+        "skip ahead",
+        "jump to the next track",
+        "next song please",
+        "skip this track",
+        "go to the next song",
+        "proceed to the next track",
+        "spotify next",
+        "move forward in the playlist"
+      ],
+      "responses": ["Skipping spotify song", "Skipping spotify"]
+    },
+    {
+      "tag": "rewind",
+      "patterns": [
+        "go back in the spotify song",
+        "rewind the track",
+        "move backward in the music",
+        "back up the song",
+        "reverse the music",
+        "spotify go back",
+        "go to the previous song",
+        "previous track please",
+        "rewind this song",
+        "step backward in the playlist",
+        "spotify previous"
+      ],
+      "responses": ["Rewinding spotify song", "Rewinding spotify"]
+    },
+    {
+      "tag": "volup",
+      "patterns": [
+        "turn the volume up",
+        "turn up the music",
+        "turn the music up",
+        "spotify volume up",
+        "volume up"
+      ],
+      "responses": ["Boosting spotify volume", "Raising volume"]
+    },
+    {
+      "tag": "voldown",
+      "patterns": [
+        "turn the volume down",
+        "turn down the music",
+        "turn the music down",
+        "spotify volume down",
+        "volume down"
+      ],
+      "responses": ["Lowering spotify volume", "Lowering volume"]
+    },
+    {
+      "tag": "weatherfull",
+      "patterns": [
+        "weather details",
+        "complete weather report",
+        "full weather forecast",
+        "detailed weather update",
+        "thorough weather information",
+        "comprehensive weather details",
+        "elaborate weather conditions",
+        "give me a detailed weather report"
+      ],
+      "responses": ["Generating full weather report"]
+    },
+    {
+      "tag": "weathershort",
+      "patterns": [
+        "weather summary",
+        "brief weather update",
+        "current conditions",
+        "quick weather report",
+        "overview of weather",
+        "short forecast",
+        "weather status"
+      ],
+      "responses": ["Generating short weather report"]
+    }
+  ]
+}

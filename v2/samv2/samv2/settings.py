@@ -38,6 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'spotify.apps.SpotifyConfig',
+    'finance.apps.FinanceConfig',
+    'weather.apps.WeatherConfig',
     'rest_framework',
 ]
 

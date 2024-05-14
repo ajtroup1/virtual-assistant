@@ -7,6 +7,9 @@ from rest_framework import status
 from rest_framework.response import Response
 from .util import *
 from .models import *
+import requests
+from .serializers import *
+import random
 
 
 class AuthURL(APIView):
@@ -89,6 +92,74 @@ class CurrentSong(APIView):
         }
 
         return Response(song, status=status.HTTP_200_OK)
+    
+class AddToFavorites(APIView):
+    def post(self, request):
+        response = requests.get('http://127.0.0.1:8000/spotify/current-song')
+
+        # Check if the request was successful
+        if response.status_code == 200:
+            song_data = response.json()
+            title = song_data.get('title')
+            artist = song_data.get('artist')
+            uri = song_data.get('id')
+
+            song = Song(uri=uri, name=title, artist=artist)
+            song.save()
+
+            # Serialize the Song object
+            serializer = SongSerializer(song)
+
+            return Response({"Added to favorites": serializer.data}, status=status.HTTP_204_NO_CONTENT)
+        else:
+            return Response({"Error fetching current song"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+class QueueByID(APIView):
+    def post(self, request, id):
+        song_by_id = Song.objects.filter(id=id)[0]
+
+        # get deivce id for song queue
+        response = requests.get('http://127.0.0.1:8000/spotify/get-device')
+        device = response.json()
+        device_id = device.get('id')
+
+        # get song uri for song queue
+        uri = song_by_id.uri
+
+        response = queue_song(device_id=device_id, uri=uri)
+
+        print(response)
+
+        return Response({"Queued Song"}, status=status.HTTP_204_NO_CONTENT)
+
+class QueueByArtist(APIView):
+    def post(self, request, artist):
+        songs_by_artist = Song.objects.filter(artist__iexact=artist)
+        print('len.....',len(songs_by_artist))
+        i = random.randint(1, len(songs_by_artist))
+        print(i)
+        uri = songs_by_artist[i-1].uri
+
+        # get deivce id for song queue
+        response = requests.get('http://127.0.0.1:8000/spotify/get-device')
+        device = response.json()
+        device_id = device.get('id')
+
+        response = queue_song(device_id=device_id, uri=uri)
+
+        return Response({"Queued Song"}, status=status.HTTP_204_NO_CONTENT)
+
+class GetFavorites(APIView):
+    def get(self, request):
+        songs = Song.objects.all()
+        serializer = SongSerializer(songs, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
+class ClearFavorites(APIView):
+    def delete(self, request):
+        songs = Song.objects.all()
+        songs.delete()
+        return Response({"Deleted successfully"}, status=status.HTTP_200_OK)
     
 class PauseSong(APIView):
     def put(self, request, format=None):

@@ -8,7 +8,7 @@ from nltk.stem import WordNetLemmatizer
 
 # Load and preprocess intents data
 lemmatizer = WordNetLemmatizer()
-intents = json.loads(open('intents.json').read())
+intents = json.loads(open('./aitools/intents.json').read())
 
 words = []
 classes = []
@@ -30,8 +30,8 @@ words = sorted(set(words))
 classes = sorted(set(classes))
 
 # Save words and classes to files
-pickle.dump(words, open('words.pkl', 'wb'))
-pickle.dump(classes, open('classes.pkl', 'wb'))
+pickle.dump(words, open('./aitools/words.pkl', 'wb'))
+pickle.dump(classes, open('./aitools/classes.pkl', 'wb'))
 
 # Prepare training data
 training = []
@@ -74,6 +74,6 @@ model.compile(loss='categorical_crossentropy', optimizer=optimizer, metrics=['ac
 model.fit(trainX, trainY, epochs=300, batch_size=4, verbose=1)
 
 # Save the trained model
-model.save('sam_modelv2.keras')
+model.save('./aitools/sam_modelv2.keras')
 
 print('Done')
