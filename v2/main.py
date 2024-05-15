@@ -2,7 +2,6 @@ import datetime
 import speech_recognition as sr
 import pyttsx3
 import webbrowser
-import wikipedia
 import sys
 import time
 # import wolframalpha
@@ -85,20 +84,6 @@ async def main():
         engine.setProperty('rate', rate)
         engine.say(text)
         engine.runAndWait()
-
-    def search_wiki(search=''): # wikipedia library sucks :(
-        print(search)
-        searchResults = wikipedia.search(search)
-        if not searchResults:
-            return 'No result received'
-        try: 
-            wikiPage = wikipedia.page(searchResults[0]) 
-        except wikipedia.DisambiguationError as error:
-            wikiPage = wikipedia.page(error.options[0])
-        
-        speak(f'pulling up the wiki for {wikiPage.title}')
-        wikiSummary = str(wikiPage.summary)
-        print(wikiSummary)
 
     def display_help_file(file_path):
         try:
@@ -233,6 +218,7 @@ async def main():
                 
                 if response.status_code == 200:
                     weather_data = response.json()
+                    os.system('cls')
                     
                     # Accessing each attribute
                     city_name = weather_data["name"]
@@ -245,15 +231,57 @@ async def main():
                     humidity = weather_data["humidity"]
 
                     # Printing the values
-                    print("City:", city_name)
-                    print("Region:", region)
-                    print("Country:", country)
-                    print("Temperature (Fahrenheit):", temperature_fahrenheit)
-                    print("Is Day:", is_day)
+                    print(f"Weather for {city_name}, {region} ({country})")
+                    print("Temperature:", temperature_fahrenheit," (F)")
+                    if is_day == 0:
+                        print("Currently night time")
+                    else:
+                        print("Currently day time")
                     print("Condition:", condition)
-                    print("Precipitation:", precipitation)
-                    print("Humidity:", humidity)
+                    if precipitation == 0:
+                        print("No precipitation")
+                    else:
+                        print("Precipitation:", precipitation, " inches")
+                    print("Humidity:", humidity,"%")
                     
+                    break
+                else:
+                    speak("Error retrieving the weather")
+            else:
+                speak('Ensure your response is in the format below:')
+                print('Example: "sam New York", or "sam Savannah Georgia"...')
+                continue
+
+    def weather_short():
+        speak('Where do you want weather info from?')
+        print('Example: "sam New York", or "sam Savannah Georgia"...')
+
+        while True:
+            response = parse_command().lower().split()
+            response.pop(0)  # 'sam'
+
+            if len(response) > 0:
+                location = ' '.join(response)
+                print('Location searched:', location)
+                
+                response = requests.get(f"http://127.0.0.1:8000/weather/currentfor/{location}")
+                
+                if response.status_code == 200:
+                    weather_data = response.json()
+                    
+                    # Accessing each attribute
+                    city_name = weather_data["name"]
+                    region = weather_data["region"]
+                    country = weather_data["country"]
+                    temperature_fahrenheit = weather_data["temp_f"]
+                    is_day = weather_data["is_day"]
+                    condition = weather_data["condition"]
+                    precipitation = weather_data["precip"]
+                    humidity = weather_data["humidity"]
+
+                    # Printing the values
+                    if is_day == 0:
+                        speak(f"It is a {condition} night in {city_name} {region}, currently {temperature_fahrenheit} degrees farenheight with {precipitation} inches of rain.")
                     break
                 else:
                     speak("Error retrieving the weather")
@@ -297,7 +325,7 @@ async def main():
             weather_full()
 
         elif intent == 'weathershort':
-            scrape_stock()
+            weather_short()
 
         elif intent == 'help':
             speak('Displaying help text...')
@@ -456,16 +484,6 @@ async def main():
                     url = 'https://' + ''.join(query) + '.com'
                     webbrowser.open(url)
                     speak(f"Ok, here's {speech}")
-
-
-            # wikipedia query
-            elif query[0] == 'search' and query[1] == 'wikipedia' or query[1] == 'wiki':
-                query.pop(0) # search
-                query.pop(0) # wikipedia
-                query.pop(0) # for
-                search = ' '.join(query[0:])
-                os.system('cls')
-                search_wiki(search=search)
 
         # default handling
         else:

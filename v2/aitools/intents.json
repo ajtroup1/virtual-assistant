@@ -353,7 +353,6 @@
     {
       "tag": "weatherfull",
       "patterns": [
-        "weather details",
         "complete weather report",
         "full weather forecast",
         "detailed weather update",
@@ -373,7 +372,11 @@
         "quick weather report",
         "overview of weather",
         "short forecast",
-        "weather status"
+        "weather status",
+        "show me a breif weather summary",
+        "give me a consice description of the weather",
+        "describe the weather currently",
+        "how is the weather"
       ],
       "responses": ["Generating short weather report"]
     }

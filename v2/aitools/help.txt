@@ -18,9 +18,6 @@ Voice "sam, say {message}":
 Web Navigation "sam, navigate to {name of website}":
 	no need to include https or .com
 
-Wikipedia lookup "sam, search wikipedia for {topic}":
-	returns the title and brief summary of the wiki
-
 Spotify integration "sam, spotify {command}"
 	Playback controller:
 		'play'
@@ -44,3 +41,7 @@ Finance capabilities:
 		Web scrape for info about a stock "sam, scrape for stock information"
 			Saves to db
 		Get stock information from previous scrapes "sam, pull up stock info"
+
+Weather reporting
+	Concise report "sam what's the weather like" "sam describe the weather"
+	Detailed weather report "sam full weather report"
