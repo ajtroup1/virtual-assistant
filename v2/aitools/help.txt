@@ -45,3 +45,11 @@ Finance capabilities:
 Weather reporting
 	Concise report "sam what's the weather like" "sam describe the weather"
 	Detailed weather report "sam full weather report"
+
+Youtube search "sam go to youtube"
+	Sam sill prompt for a query to search youtube with
+
+Scraping price information
+	Scrape a product "sam scrape a product"
+		Sam will prompot for a product to scrape
+		Sam will prompt to save to a csv

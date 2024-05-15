@@ -379,6 +379,39 @@
         "how is the weather"
       ],
       "responses": ["Generating short weather report"]
+    },
+    {
+      "tag": "youtube",
+      "patterns": [
+        "pull up youtube",
+        "show me youtube",
+        "pull up a video",
+        "show me a video",
+        "open youtube",
+        "visit youtube",
+        "youtube",
+        "play a video from youtube",
+        "show me youtube videos"
+      ],
+      "responses": ["Going to youtube"]
+    },
+    {
+      "tag": "pricescrape",
+      "patterns": [
+        "find prices for",
+        "scrape prices",
+        "get price information",
+        "find out how much this costs",
+        "search prices for this product",
+        "show me the price of",
+        "price lookup for",
+        "retrieve prices for",
+        "get cost details for",
+        "check the price of",
+        "price comparison for",
+        "price analysis for"
+      ],
+      "responses": ["Scraping price"]
     }
   ]
 }

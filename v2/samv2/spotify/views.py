@@ -134,7 +134,11 @@ class QueueByID(APIView):
 
 class QueueByArtist(APIView):
     def post(self, request, artist):
-        songs_by_artist = Song.objects.filter(artist__iexact=artist)
+        songs = Song.objects.all()
+        songs_by_artist = []
+        for song in songs:
+            if artist.upper() in song.artist.upper():
+                songs_by_artist.append(song)
         print('len.....',len(songs_by_artist))
         i = random.randint(1, len(songs_by_artist))
         print(i)

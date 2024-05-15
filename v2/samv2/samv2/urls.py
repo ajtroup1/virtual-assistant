@@ -16,10 +16,13 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from .views import *
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('spotify/', include('spotify.urls')),
     path('finance/', include('finance.urls')),
     path('weather/', include('weather.urls')),
+    path('youtube/<str:query>', YoutubeScraper.as_view()),
+    path('price-scrape/<str:query>', PriceScraper.as_view())
 ]

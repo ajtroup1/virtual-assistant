@@ -14,8 +14,11 @@ import pickle
 import numpy as np
 import nltk
 import asyncio
+import csv
 from nltk import WordNetLemmatizer
 from tensorflow.keras.models import load_model
+
+mode = "speech"
 
 async def main():
     # AI importation and function
@@ -79,7 +82,7 @@ async def main():
     voices = engine.getProperty('voices')
     engine.setProperty('voice', voices[0].id) # 0=male, 1=female voice
 
-    def speak(text, rate=175):
+    def speak(text, rate=150):
         print(text)
         engine.setProperty('rate', rate)
         engine.say(text)
@@ -290,6 +293,83 @@ async def main():
                 print('Example: "sam New York", or "sam Savannah Georgia"...')
                 continue
 
+    def youtube():
+        speak('What do you want to search on youtube?')
+        print('Example: "sam woodworking", or "sam cooking steak"...')
+
+        while True:
+            response = parse_command().lower().split()
+            response.pop(0)  # 'sam'
+
+            if len(response) > 0:
+                query = ' '.join(response)
+                print('searching:', query)
+                
+                response = requests.post(f"http://127.0.0.1:8000/youtube/{query}")
+
+                if response.status_code == 500:
+                    speak("Leaving Youtube")
+                    break
+                
+                elif response.status_code == 204:
+                    # all good
+                    break
+                else:
+                    speak("Error going to youtube")
+            else:
+                speak('Ensure your response is in the format below:')
+                print('Example: "sam woodworking", or "sam cooking steak"...')
+                continue
+
+    def price_scraper():
+        speak('What product do you want to scrape?')
+        print('Example: "sam laptops", or "sam nonfiction books"...')
+
+        while True:
+            response = parse_command().lower().split()
+            response.pop(0)  # 'sam'
+
+            if len(response) > 0:
+                query = ' '.join(response)
+                fi = ''.join(response)
+                print('searching:', query)
+                
+                response = requests.post(f"http://127.0.0.1:8000/price-scrape/{query}")
+
+                if response.status_code == 200:
+                    items = response.json()
+                    while True:
+                        speak("Do you want to save this information to a csv?")
+                        print('Example: "sam yes", or "sam no')
+                        response = parse_command().lower().split()
+                        response.pop(0)  # 'sam'
+                        if response[0].lower() == 'yes':
+                            BASE_FILE = r"c:\Users\epicn\Desktop\\pricescrapes\\"
+                            filename = BASE_FILE + fi + ".csv"
+                            print('Saved CSV to: '+filename)
+                            with open(filename, 'w', newline='', encoding='utf-8') as csvfile:
+                                fieldnames = ['name', 'rating', 'price', 'href', 'tqs', 'free_delivery']
+                                writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+
+                                writer.writeheader()
+                                for item in items:
+                                    writer.writerow(item)
+                            break
+                        elif response[0].lower() == 'no':
+                            break
+                        else:
+                            speak('Invalid input')
+                            print('Example: "sam yes", or "sam no')
+                            continue
+                    break
+                else:
+                    speak("Error scraping price")
+            else:
+                speak('Ensure your response is in the format below:')
+                print('Example: "sam laptops", or "sam nonfiction books"...')
+                continue
+
+
     async def route_sam_function(query=None, intent=None):
         if intent == 'goodbyes':
             speak('Shutting down...')
@@ -326,6 +406,12 @@ async def main():
 
         elif intent == 'weathershort':
             weather_short()
+
+        elif intent == 'youtube':
+            youtube()
+
+        elif intent == 'pricescrape':
+            price_scraper()
 
         elif intent == 'help':
             speak('Displaying help text...')
@@ -393,7 +479,7 @@ async def main():
                     continue
                 else:
                     response.pop(0)  # 'sam'
-                    print(response)
+                    print(' '.join(response))
                     response = requests.post(f"http://127.0.0.1:8000/spotify/queue-artist/{' '.join(response)}")
                     if response.status_code == 204:
                         speak('Queued')
