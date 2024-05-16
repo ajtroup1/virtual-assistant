@@ -9,7 +9,7 @@ import time
 from rest_framework import status
 from rest_framework.response import Response
 
-def RunScraper(search_val, max_iterations=1):
+def RunScraper(search_val, max_iterations=4):
     return_items = []
     service = Service(executable_path="chromedriver.exe")
     driver = webdriver.Chrome(service=service)
@@ -84,7 +84,7 @@ def RunScraper(search_val, max_iterations=1):
                 'free_delivery': free_delivery,
             }
 
-            if name == "" or price == "":
+            if name == "" or price == "" or not name or not price:
                 pass
             else:
                 return_items.append(i)

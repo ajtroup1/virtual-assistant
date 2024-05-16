@@ -18,8 +18,7 @@ import csv
 from nltk import WordNetLemmatizer
 from tensorflow.keras.models import load_model
 
-mode = "speech"
-
+SPEECH_MODE = True
 async def main():
     # AI importation and function
     lemmatizer = WordNetLemmatizer()
@@ -62,15 +61,6 @@ async def main():
         
         return return_list
 
-    def get_response(intents_list, intents_json):
-        tag = intents_list[0]['intent']
-        list_of_intents = intents_json['intents']
-        for i in list_of_intents:
-            if i['tag'] == tag:
-                result = random.choice(i['responses'])
-                break
-        return result
-
     # SAM code start
     os.system('cls')
 
@@ -80,9 +70,9 @@ async def main():
     # tts engine
     engine = pyttsx3.init()
     voices = engine.getProperty('voices')
-    engine.setProperty('voice', voices[0].id) # 0=male, 1=female voice
+    engine.setProperty('voice', voices[1].id) # 0=male, 1=female voice
 
-    def speak(text, rate=150):
+    def speak(text, rate=100):
         print(text)
         engine.setProperty('rate', rate)
         engine.say(text)
@@ -97,27 +87,28 @@ async def main():
             print(f"Error: File '{file_path}' not found.")
 
     def parse_command():
-        listener = sr.Recognizer()
+        global SPEECH_MODE
+        if SPEECH_MODE: 
+            listener = sr.Recognizer()
 
-        with sr.Microphone() as source:
-            listener.pause_threshold = 1.25
-            input_speech = listener.listen(source=source)
+            with sr.Microphone() as source:
+                listener.pause_threshold = 1.25
+                input_speech = listener.listen(source=source)
 
-        try:
-            query = listener.recognize_google(input_speech, language='en_us')
-            if 'sam' not in query.lower():
-                parse_command()
-            print(f'You said: {query.lower()}\n')
-        except Exception as e:
-            # err = f'You are bad at giving me directions, look at this: {e}'
-            # speak(err)
-            return 'None'
-        
-        return query.lower()
+            try:
+                query = listener.recognize_google(input_speech, language='en_us')
+                if 'sam' not in query.lower():
+                    parse_command()
+                print(f'You said: {query.lower()}\n')
+                return query.lower()
+            except Exception as e:
+                return "" 
+        else:
+            return input("Enter your command: ").lower()
     
     async def set_timer():
+        global SPEECH_MODE
         speak('How long should I set the timer for? ')
-        print('Ex. "sam 15 minutes", or "sam 1 hour"')
 
         allowed_units = ['second', 'seconds', 'minute', 'minutes', 'hour', 'hours']
 
@@ -126,9 +117,13 @@ async def main():
 
         while True:
             response = parse_command().lower().split()
-            response.pop(0)  # 'sam'
+            if response == []:
+                continue
+            if SPEECH_MODE:
+                response.pop(0)  # 'sam'
             if len(response) != 2 or response[1] not in allowed_units:
                 speak('Sorry, I couldn\'t understand the time format. Try again...')
+                print('Remember to include "sam" if you are in speech mode')
                 continue
             else:
                 break
@@ -140,19 +135,24 @@ async def main():
             timer_duration = val * 60  # Convert minutes to seconds
         elif time_unit == 'hour' or time_unit == 'hours':
             timer_duration = val * 3600  # Convert hours to seconds
+        else:
+            timer_duration = val
 
         speak(f'Setting a timer for {val} {time_unit}')
         await asyncio.sleep(timer_duration)
 
     def get_stock():
+        global SPEECH_MODE
         speak('What stock do you want to find information about?')
-        print('Example: "sam MSTR", or "sam AAPL"... (Enunciate clearly)')
 
         response = None
 
         while True:
             response = parse_command().lower().split()
-            response.pop(0)  # 'sam'
+            if response == []:
+                continue
+            if SPEECH_MODE:
+                response.pop(0)  # 'sam'
             if len(response) == 1 or len(response) == 4:
                 if len(response) == 4:
                     response[0] = ''.join(response)
@@ -175,19 +175,22 @@ async def main():
             else:
                 speak('Ensure your response is in the format below:')
                 print('"MSFT"')
-                print(f"Your response: {response}, ({len(response)} chars). Try again...")
+                print(f"Your response: {response}, ({len(response)} chars). Remember to include 'sam' if you are in speech mode. Try again...")
                 continue
 
     def scrape_stock():
+        global SPEECH_MODE
         print('(Web scraping can take a moment to complete)')
         speak('What stock do you want to scrape?')
-        print('Example: "sam MSTR", or "sam AAPL"... (Enunciate clearly)')
 
         response = None
 
         while True:
             response = parse_command().lower().split()
-            response.pop(0)  # 'sam'
+            if response == []:
+                continue
+            if SPEECH_MODE:
+                response.pop(0)  # 'sam'
             if len(response) == 1 or len(response) == 4:
                 if len(response) == 4:
                     response[0] = ''.join(response)
@@ -202,16 +205,19 @@ async def main():
             else:
                 speak('Ensure your response is in the format below:')
                 print('"MSFT"')
-                print(f"Your response: {response}, ({len(response)} chars). Try again...")
+                print(f"Your response: {response}, ({len(response)} chars). Remember to include 'sam' if you are in speech mode. Try again...")
                 continue
 
     def weather_full():
+        global SPEECH_MODE
         speak('Where do you want weather info from?')
-        print('Example: "sam New York", or "sam Savannah Georgia"...')
 
         while True:
             response = parse_command().lower().split()
-            response.pop(0)  # 'sam'
+            if response == []:
+                continue
+            if SPEECH_MODE:
+                response.pop(0)  # 'sam'
 
             if len(response) > 0:
                 location = ' '.join(response)
@@ -251,17 +257,20 @@ async def main():
                 else:
                     speak("Error retrieving the weather")
             else:
-                speak('Ensure your response is in the format below:')
-                print('Example: "sam New York", or "sam Savannah Georgia"...')
+                print('Error in input')
+                print('Remember to include "sam" if you are in speech mode')
                 continue
 
     def weather_short():
+        global SPEECH_MODE
         speak('Where do you want weather info from?')
-        print('Example: "sam New York", or "sam Savannah Georgia"...')
 
         while True:
             response = parse_command().lower().split()
-            response.pop(0)  # 'sam'
+            if response == []:
+                continue
+            if SPEECH_MODE:
+                response.pop(0)  # 'sam'
 
             if len(response) > 0:
                 location = ' '.join(response)
@@ -285,21 +294,26 @@ async def main():
                     # Printing the values
                     if is_day == 0:
                         speak(f"It is a {condition} night in {city_name} {region}, currently {temperature_fahrenheit} degrees farenheight with {precipitation} inches of rain.")
+                    else:
+                        speak(f"It is a {condition} day in {city_name} {region}, currently {temperature_fahrenheit} degrees farenheight with {precipitation} inches of rain.")
                     break
                 else:
                     speak("Error retrieving the weather")
             else:
-                speak('Ensure your response is in the format below:')
-                print('Example: "sam New York", or "sam Savannah Georgia"...')
+                print('Error in input')
+                print('Remember to include "sam" if you are in speech mode')
                 continue
 
     def youtube():
+        global SPEECH_MODE
         speak('What do you want to search on youtube?')
-        print('Example: "sam woodworking", or "sam cooking steak"...')
 
         while True:
             response = parse_command().lower().split()
-            response.pop(0)  # 'sam'
+            if response == []:
+                continue
+            if SPEECH_MODE:
+                response.pop(0)  # 'sam'
 
             if len(response) > 0:
                 query = ' '.join(response)
@@ -317,17 +331,21 @@ async def main():
                 else:
                     speak("Error going to youtube")
             else:
-                speak('Ensure your response is in the format below:')
-                print('Example: "sam woodworking", or "sam cooking steak"...')
+                print('Error in input')
+                print('Remember to include "sam" if you are in speech mode')
                 continue
 
     def price_scraper():
+        global SPEECH_MODE
+        print('(Web scraping can take a moment to complete)')
         speak('What product do you want to scrape?')
-        print('Example: "sam laptops", or "sam nonfiction books"...')
 
         while True:
             response = parse_command().lower().split()
-            response.pop(0)  # 'sam'
+            if response == []:
+                continue
+            if SPEECH_MODE:
+                response.pop(0)  # 'sam'
 
             if len(response) > 0:
                 query = ' '.join(response)
@@ -340,9 +358,10 @@ async def main():
                     items = response.json()
                     while True:
                         speak("Do you want to save this information to a csv?")
-                        print('Example: "sam yes", or "sam no')
+                        print('Example: "yes", or "no')
                         response = parse_command().lower().split()
-                        response.pop(0)  # 'sam'
+                        if SPEECH_MODE:
+                            response.pop(0)  # 'sam'
                         if response[0].lower() == 'yes':
                             BASE_FILE = r"c:\Users\epicn\Desktop\\pricescrapes\\"
                             filename = BASE_FILE + fi + ".csv"
@@ -359,21 +378,36 @@ async def main():
                             break
                         else:
                             speak('Invalid input')
-                            print('Example: "sam yes", or "sam no')
+                            print('Example: "yes", or "no". Remember to include "sam" if you are in speech mode.')
                             continue
                     break
                 else:
                     speak("Error scraping price")
             else:
-                speak('Ensure your response is in the format below:')
-                print('Example: "sam laptops", or "sam nonfiction books"...')
+                print('Error in input')
+                print('Remember to include "sam" if you are in speech mode')
                 continue
 
 
     async def route_sam_function(query=None, intent=None):
-        if intent == 'goodbyes':
+        global SPEECH_MODE
+        if intent == 'textmode':
+            if not SPEECH_MODE:
+                speak('Already in text mode')
+            else:
+                SPEECH_MODE = False
+        elif intent == 'speechmode':
+            if SPEECH_MODE:
+                speak('Already in speech mode')
+            else:
+                SPEECH_MODE = True
+
+        elif intent == 'goodbyes':
             speak('Shutting down...')
             sys.exit(0)
+
+        elif intent == 'greetings':
+            speak('Hello, how can i help you today?')
 
         # sam voice request
         elif query[0] == 'say': 
@@ -453,14 +487,14 @@ async def main():
         elif intent == 'queueid':
             while True:
                 speak("What is the id of the song?")
-                print('Ex. "sam 5"')
+                print('Ex. 5')
                 response = parse_command().lower().split()
-                if len(response) != 2:
+                if len(response) < 1:
                     print("Use the format above (sam 1)")
                     continue
                 else:
-                    response.pop(0)  # 'sam'
-                    print(response)
+                    if SPEECH_MODE:
+                        response.pop(0)  # 'sam'
                     if response[0] == 'one':
                         response[0] = 1
                     response = requests.post(f"http://127.0.0.1:8000/spotify/queue-id/{response[0]}")
@@ -472,14 +506,14 @@ async def main():
         elif intent == 'queueartist':
             while True:
                 speak("What artist?")
-                print('Ex. "sam Future"')
+                print('Ex. "Future"')
                 response = parse_command().lower().split()
-                if len(response) < 2:
+                if len(response) < 1:
                     print("Use the format above (sam Future)")
                     continue
                 else:
-                    response.pop(0)  # 'sam'
-                    print(' '.join(response))
+                    if SPEECH_MODE:
+                        response.pop(0)  # 'sam'
                     response = requests.post(f"http://127.0.0.1:8000/spotify/queue-artist/{' '.join(response)}")
                     if response.status_code == 204:
                         speak('Queued')
@@ -574,13 +608,15 @@ async def main():
         # default handling
         else:
             speak("I heard you say my name, but didn't hear a keyword after. To refer to the SAM documentation say, sam help!")
-
-    # user loop
-
-    print('Currently listening to everything you are saying! "sam help" for menu')
-
+    
+    print('Currently listening to everything you are saying! Just say "sam help" for menu')
+    
+    global SPEECH_MODE
+    if SPEECH_MODE:
+        print('Currently in speech mode')
+    else:
+        print('Currently in text mode')
     while True:
-        # message structure: "computer (act word), go to google.com (request) (2 sec silence stops)"
         query = parse_command().lower().split()
         class_query = ' '.join(query)
         ints = predict_class(class_query)
@@ -592,16 +628,15 @@ async def main():
             prob = float(dict['probability'])
 
             if prob < .8:
-                # speak("I'm not quite sure what you mean by that")
                 pass
             else:
-
-                # print(intent_value)
-
                 if query[0] == activation_word:
                     query.pop(0)
                 else:
-                    continue
+                    if not SPEECH_MODE:
+                        pass
+                    else:
+                        continue
                 
                 await route_sam_function(query=query, intent=intent_value)
 

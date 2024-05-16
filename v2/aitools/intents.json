@@ -1,6 +1,36 @@
 {
   "intents": [
     {
+      "tag": "textmode",
+      "patterns": [
+        "text mode",
+        "switch to text input",
+        "text input",
+        "go to text mode",
+        "i want to type in",
+        "typing mode",
+        "switch to typing",
+        "get off speech mode",
+        "leave speaking mode"
+      ],
+      "responses": ["Switching to text mode"]
+    },
+    {
+      "tag": "speechmode",
+      "patterns": [
+        "speech mode",
+        "switch to speech input",
+        "speech input",
+        "go to speech mode",
+        "i want to speak in",
+        "speaking mode",
+        "switch to speaking",
+        "get off text mode",
+        "leave texting mode"
+      ],
+      "responses": ["Switching to speech mode"]
+    },
+    {
       "tag": "greetings",
       "patterns": [
         "hello",
@@ -12,7 +42,9 @@
         "Greetings!",
         "Hey, how's it going?",
         "Good day!",
-        "What's up?"
+        "What's up?",
+        "What's going on",
+        "How are you"
       ],
       "responses": ["Hello!", "Hey!", "How can I help you today?"]
     },
@@ -143,19 +175,10 @@
         "set a timer",
         "start the timer",
         "timer",
-        "can you set a timer for"
+        "can you set a timer for",
+        "time me"
       ],
       "responses": ["Setting a timer"]
-    },
-    {
-      "tag": "stopwatch",
-      "patterns": [
-        "set a stopwatch",
-        "start the stopwatch",
-        "stopwatch",
-        "can you begin the stopwatch"
-      ],
-      "responses": ["Starting the stopwatch"]
     },
     {
       "tag": "scrapestock",
@@ -167,7 +190,10 @@
         "Can you find more information about stock X online?",
         "Search the web for detailed information on stock X",
         "Scrape the internet for up-to-date data on stock X",
-        "Find out more about stock X from online sources"
+        "Find out more about stock X from online sources",
+        "scrape stock information",
+        "scrape stock",
+        "search for stock info"
       ],
       "responses": ["Scraping for stock"]
     },
@@ -181,7 +207,8 @@
         "Pull up the latest information on stock X",
         "Retrieve detailed data regarding stock X",
         "Fetch information about stock X from the database",
-        "Tell me about the current status of stock X"
+        "Tell me about the current status of stock X",
+        "get more stock information"
       ],
       "responses": ["Getting stock info"]
     },
@@ -198,7 +225,8 @@
         "song details",
         "song identification",
         "what's on Spotify",
-        "what's the title of this song"
+        "what's the title of this song",
+        "what song is this"
       ],
       "responses": ["The song is...", "This song is ... by ..."]
     },
@@ -376,7 +404,8 @@
         "show me a breif weather summary",
         "give me a consice description of the weather",
         "describe the weather currently",
-        "how is the weather"
+        "how is the weather",
+        "weather report breif"
       ],
       "responses": ["Generating short weather report"]
     },
@@ -409,7 +438,8 @@
         "get cost details for",
         "check the price of",
         "price comparison for",
-        "price analysis for"
+        "price analysis for",
+        "scrape product info"
       ],
       "responses": ["Scraping price"]
     }

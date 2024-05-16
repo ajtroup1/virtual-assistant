@@ -104,6 +104,11 @@ class AddToFavorites(APIView):
             artist = song_data.get('artist')
             uri = song_data.get('id')
 
+            # Check if the song is already favorited
+            if Song.objects.filter(uri=uri).exists():
+                return Response({"message": "Song is already favorited"}, status=status.HTTP_204_NO_CONTENT)
+
+            # If not favorited, add it to favorites
             song = Song(uri=uri, name=title, artist=artist)
             song.save()
 
