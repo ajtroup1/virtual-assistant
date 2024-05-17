@@ -1,1 +1,61 @@
 # virtual-assistant
+
+SAM v2 capabilities:
+
+**Some capabilities like spotify and finance requre Djano db to be running so run "python manage.py runserver" in /v2/samv2
+
+You can switch between text and speech mode
+	switch to text / typing mode: "sam, switch to text mode"
+	switch to speech mode: "switch to speech mode"
+
+You must indicate a message is intended for sam: "sam, {message}"
+
+After 'sam' is included, use references to structure your command:
+
+"sam, help" returns this txt
+
+exit using "sam, exit"
+
+clear the screen at any time by saying "sam, clear"
+
+Voice "sam, say {message}":
+	says anything on command
+
+Web Navigation "sam, navigate to {name of website}":
+	no need to include https or .com
+
+Spotify integration "sam, spotify {command}"
+	Playback controller:
+		'play'
+		'pause'
+		'skip'
+		'rewind'
+		'turn it up'
+		'turn it down'
+	Favorite songs:
+		Favorite a song "sam favorite this song"
+		See your favorited songs "sam show me my favorited songs"
+	Queue a favorited song by id or a random favorited song from a artist:
+		"sam queue a song by id"
+		"sam queue a song by artist"
+			-sam will ask you for either an id or artist
+		
+Timer "sam set a timer"
+
+Finance capabilities:
+	Stocks:
+		Web scrape for info about a stock "sam, scrape for stock information"
+			Saves to db
+		Get stock information from previous scrapes "sam, pull up stock info"
+
+Weather reporting
+	Concise report "sam what's the weather like" "sam describe the weather"
+	Detailed weather report "sam full weather report"
+
+Youtube search "sam go to youtube"
+	Sam sill prompt for a query to search youtube with
+
+Scraping price information
+	Scrape a product "sam scrape a product"
+		Sam will prompot for a product to scrape
+		Sam will prompt to save to a csv
