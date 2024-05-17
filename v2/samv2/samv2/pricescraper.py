@@ -9,7 +9,7 @@ import time
 from rest_framework import status
 from rest_framework.response import Response
 
-def RunScraper(search_val, max_iterations=4):
+def RunScraper(search_val, max_iterations=10):
     return_items = []
     service = Service(executable_path="chromedriver.exe")
     driver = webdriver.Chrome(service=service)
