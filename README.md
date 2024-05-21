@@ -8,7 +8,7 @@ You can switch between text and speech mode
 	switch to text / typing mode: "sam, switch to text mode"
 	switch to speech mode: "switch to speech mode"
 
-You must indicate a message is intended for sam: "sam, {message}"
+You must indicate a message is intended for sam if you are in speech mode: "sam, {message}"
 
 After 'sam' is included, use references to structure your command:
 
